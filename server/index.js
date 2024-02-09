@@ -7,14 +7,16 @@ config({
 });
 
 const app = express();
-const io = new Server();
+const io = new Server({
+    cors: true
+});
 
 /* DB */
 const emailToSocketMapping = new Map();
 
 io.on("connection", (socket) => {
+    console.log("New Connection");
     socket.on("join-room", (data) => {
-        console.log("New Connection");
         const { roomId, emailId } = data;
         console.log(`User ${emailId} joined room ${roomId}`);
         emailToSocketMapping.set(emailId, socket.id);
@@ -31,6 +33,7 @@ app.listen(process.env.PORT, () => {
     console.log(`Server listening on port http://localhost:${process.env.PORT}`)
 })
 
-io.listen(process.env.SOCKET_PORT, () => {
-    console.log(`Socket.io listening on port http://localhost:${process.env.SOCKET_PORT}`)
-})
+// io.listen(process.env.SOCKET_PORT, () => {
+//     console.log(`Socket.io listening on port http://localhost:${process.env.SOCKET_PORT}`)
+// })
+io.listen(8003)
